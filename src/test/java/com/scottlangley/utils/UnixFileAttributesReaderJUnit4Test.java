@@ -51,7 +51,7 @@ public class UnixFileAttributesReaderJUnit4Test extends FileAttributesReaderJUni
 
     @Test
     public void testWindowsAndUnixAttributes() throws Exception {
-        Assume.assumeTrue(FileAttributesReader.IS_WINDOWS);
+        Assume.assumeFalse(FileAttributesReader.IS_WINDOWS);
         File createdFile = tempFolder.newFile("windowsfile.txt");
         DeepFileAttributesReader fileAttributes = DeepFileAttributesReader.createOsSpecificReader(createdFile);
         // Windows-only attributes
