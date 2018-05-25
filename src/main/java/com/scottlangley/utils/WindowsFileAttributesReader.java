@@ -1,18 +1,18 @@
 /*
-* Copyright 2018 Scott Langley
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2018 Scott Langley
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.scottlangley.utils;
 
 import java.io.File;
@@ -24,12 +24,11 @@ import java.nio.file.Path;
  * Utility class for reading the file attributes available via the Java NIO package plus the Windows-specific
  * attributes available from the WindowsFileAttributes internal JDK class.
  *
- * @see <a href="https://github.com/frohoff/jdk8u-jdk/blob/master/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java">https://github.com/frohoff/jdk8u-jdk/blob/master/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java</a>
  * @author Scott Langley (https://github.com/selangley)
+ * @see <a href="https://github.com/frohoff/jdk8u-jdk/blob/master/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java">https://github.com/frohoff/jdk8u-jdk/blob/master/src/windows/classes/sun/nio/fs/WindowsFileAttributes.java</a>
  */
 @SuppressWarnings("unchecked")
-public class WindowsFileAttributesReader extends FileAttributesReader {
-
+public class WindowsFileAttributesReader extends FileAttributesReader implements DeepFileAttributesReader {
 
     private Integer attributes;
     private Integer volSerialNumber;
@@ -48,7 +47,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
     private static String WINDOWS_FILE_ATTRIBUTES_IS_DIRECTORY_LINK_METHOD = "isDirectoryLink";
 
     @SuppressWarnings("rawtypes")
-	private static Class WindowsFileAttributesClass;
+    private static Class WindowsFileAttributesClass;
     private static Method attributesMethod;
     private static Method volSerialNumberMethod;
     private static Method fileIndexHighMethod;
@@ -104,6 +103,8 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the attributes
      */
+
+    @Override
     public Integer getAttributes() {
         return attributes;
     }
@@ -113,6 +114,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the Volume Serial Number
      */
+    @Override
     public Integer getVolSerialNumber() {
         return volSerialNumber;
     }
@@ -122,6 +124,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the file index high
      */
+    @Override
     public Integer getFileIndexHigh() {
         return fileIndexHigh;
     }
@@ -131,6 +134,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the file index low
      */
+    @Override
     public Integer getFileIndexLow() {
         return fileIndexLow;
     }
@@ -140,6 +144,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the boolean
      */
+    @Override
     public Boolean isReparsePoint() {
         return isReparsePoint;
     }
@@ -149,6 +154,7 @@ public class WindowsFileAttributesReader extends FileAttributesReader {
      *
      * @return the boolean
      */
+    @Override
     public Boolean isDirectoryLink() {
         return isDirectoryLink;
     }

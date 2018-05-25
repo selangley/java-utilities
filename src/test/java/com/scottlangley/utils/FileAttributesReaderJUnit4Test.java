@@ -1,18 +1,18 @@
 /*
-* Copyright 2018 Scott Langley
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright 2018 Scott Langley
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.scottlangley.utils;
 
 import java.io.File;
@@ -38,13 +38,17 @@ public class FileAttributesReaderJUnit4Test {
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
 
+    FileAttributesReader createFileAttributesReader(File createdFile) {
+        return new FileAttributesReader(createdFile);
+    }
+
     @Test
     public void testBasicFileAttributes() throws IOException {
         File createdFile = tempFolder.newFile("basic.txt");
         byte[] testBytes = {1};
         Long currentTimeInMilliseconds = new Date().getTime();
         java.nio.file.Files.write(createdFile.toPath(), testBytes, StandardOpenOption.SYNC);
-        FileAttributesReader fileAttributes = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes = createFileAttributesReader(createdFile);
 
         assertTrue(isWithinOneSecond(fileAttributes.getCreationTimeSec(), currentTimeInMilliseconds));
         assertTrue(isWithinOneSecond(fileAttributes.getLastAccessTimeSec(), currentTimeInMilliseconds));
@@ -63,7 +67,7 @@ public class FileAttributesReaderJUnit4Test {
     public void testFileKeyAttributes() throws IOException {
         Assume.assumeFalse(FileAttributesReader.IS_WINDOWS);
         File createdFile = tempFolder.newFile("testfile.txt");
-        FileAttributesReader fileAttributes = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes = createFileAttributesReader(createdFile);
 
         assertNotNull(fileAttributes.getFileKey());
         assertNotNull(fileAttributes.getDev());
@@ -77,7 +81,7 @@ public class FileAttributesReaderJUnit4Test {
             ClassNotFoundException, InstantiationException, NoSuchMethodException, SecurityException {
         Assume.assumeFalse(FileAttributesReader.IS_WINDOWS);
         File createdFile = tempFolder.newFile("posixfile.txt");
-        FileAttributesReader fileAttributes = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes = createFileAttributesReader(createdFile);
         String UNIX_AUTH_MODULE_CLASSNAME = "com.sun.security.auth.module.UnixSystem";
         String UNIX_AUTH_MODULE_USERNAME_METHOD = "getUsername";
         String UNIX_AUTH_MODULE_UID_METHOD = "getUid";
@@ -104,7 +108,7 @@ public class FileAttributesReaderJUnit4Test {
         createdFile.setReadable(false, false);
         createdFile.setWritable(false, false);
         createdFile.setExecutable(false, false);
-        FileAttributesReader fileAttributes = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes = createFileAttributesReader(createdFile);
 
         assertEquals("---------", fileAttributes.getPosixFilePermissionsAsString());
         assertEquals("000", fileAttributes.getPosixFilePermissionsInNumericForm());
@@ -112,7 +116,7 @@ public class FileAttributesReaderJUnit4Test {
         createdFile.setReadable(true, true);
         createdFile.setWritable(true, true);
         createdFile.setExecutable(true, true);
-        FileAttributesReader fileAttributes2 = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes2 = createFileAttributesReader(createdFile);
 
         assertEquals("rwx------", fileAttributes2.getPosixFilePermissionsAsString());
         assertEquals("700", fileAttributes2.getPosixFilePermissionsInNumericForm());
@@ -122,7 +126,7 @@ public class FileAttributesReaderJUnit4Test {
     public void testDosFileAttributes() throws IOException {
         Assume.assumeTrue(FileAttributesReader.IS_WINDOWS);
         File createdFile = tempFolder.newFile("dosfile.txt");
-        FileAttributesReader fileAttributes = new FileAttributesReader(createdFile);
+        FileAttributesReader fileAttributes = createFileAttributesReader(createdFile);
 
         assertFalse(fileAttributes.isReadOnly());
         assertFalse(fileAttributes.isHidden());
